@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  gitlab.local:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: flask:0.0.1
+
+    volumes:
+      - ./code:/code/
+
+    environment:
+      FLASK_APP: /code/main.py
+      VIRTUAL_HOST: gitlab.local
+      VIRTUAL_PORT: 5000
+    command: flask run --host=0.0.0.0
+    ports: 
+      - 5000
+    expose:
+      - 5000
+
+networks:
+  default:
+    external:
+      name: nginx-proxy
+
+
+
