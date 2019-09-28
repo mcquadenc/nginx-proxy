@@ -13,10 +13,10 @@ services:
     environment:
       FLASK_APP: /code/main.py
       VIRTUAL_HOST: gitlab.local
-      VIRTUAL_PORT: 5000
-    command: flask run --host=0.0.0.0
+      VIRTUAL_PORT: 800
+    command: flask run --host=0.0.0.0 --port=800
     ports: 
-      - 5000
+      - '5000:800'
     expose:
       - 5000
 
