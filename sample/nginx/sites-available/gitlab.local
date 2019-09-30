@@ -1,0 +1,25 @@
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name gitlab.local;
+    return 302 https://$server_name$request_uri;
+}
+
+
+
+server {
+  listen 443 ssl;
+  listen [::]:443 ssl;
+
+  ssl_certificate /media/mcquade/Dados/docker/nginx-proxy/reverse-proxy/certs/gitlab.local.crt;
+  ssl_certificate_key /media/mcquade/Dados/docker/nginx-proxy/reverse-proxy/certs/gitlab.local.key;
+
+  server_name gitlab.local;
+
+  location / {
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_pass http://gitlab.local:880/;
+      proxy_buffering off;
+  }
+}
