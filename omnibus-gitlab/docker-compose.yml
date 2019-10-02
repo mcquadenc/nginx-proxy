@@ -5,7 +5,20 @@ services:
     image: 'gitlab/gitlab-ce:latest'
     container_name: gitlab.local
     restart: always
-    hostname: 'gitlab.local'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'https://gitlab.local'
+        nginx['listen_port'] = 80
+        nginx['listen_https'] = false
+        nginx['proxy_set_headers'] = {
+          "X-Forwarded-Proto" => "https",
+          "X-Forwarded-Ssl" => "on",
+          "Host" => "gitlab.local",
+          "X-Real-IP" => "$$remote_addr",
+          "X-Forwarded-For" => "$$proxy_add_x_forwarded_for",
+          "Upgrade" => "$$http_upgrade",
+          "Connection" => "$$connection_upgrade"
+        }
     ports:
       - '880:80'
       - '222:22'

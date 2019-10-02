@@ -165,6 +165,16 @@ To create the certificates, we use the [create-ssl-certificate](https://github.c
 -   In this popup, click on the small arrow in front of `Trust`.
 -   In `When using this certificate`, select `Always trust` and close the popup.
 
+
+OBS.: Se não funcionar poderá verificar os seguintes passos, observando o domínio gitlab.local:
+sudo apt-get install ntp
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout gitlab.local.key -out gitlab.local.crt 
+Isso é necessário para validar o certificado
+sudo cp gitlab.local.crt /usr/local/share/ca-certificates/
+sudo update-ca-certificates
+sudo service nginx reload
+
+
 Now Chrome trusts the certificate. Firefox is a bit more picky and we have to explicitly trust the certificate when prompted.
 
 ----------
