@@ -6,17 +6,25 @@ server {
 }
 
 
+map $http_upgrade $connection_upgrade {
+    default upgrade;
+    '' close;
+}
+
 
 server {
   listen 443 ssl;
   listen [::]:443 ssl;
 
-  ssl_certificate /media/mcquade/Dados/docker/nginx-proxy/reverse-proxy/certs/gitlab.local.crt;
-  ssl_certificate_key /media/mcquade/Dados/docker/nginx-proxy/reverse-proxy/certs/gitlab.local.key;
+  ssl_certificate /media/mcquade/Dados/docker/nginx-proxy/reverse-proxy/certs_other/gitlab.local.crt;
+  ssl_certificate_key /media/mcquade/Dados/docker/nginx-proxy/reverse-proxy/certs_other/gitlab.local.key;
 
   server_name gitlab.local;
 
   location / {
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection $connection_upgrade;
+
       proxy_set_header Host $host;
       proxy_set_header X-Real-IP $remote_addr;
       proxy_pass http://gitlab.local:880/;
